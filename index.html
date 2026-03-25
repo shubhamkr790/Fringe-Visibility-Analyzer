@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Fringe Visibility Analyzer — Physics-accurate interactive simulation of interference fringe formation and visibility in optical systems. QtHack04.">
+    <title>Fringe Visibility Analyzer — Optical Interference Simulation</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ===== HEADER / NAVBAR ===== -->
+    <header class="header">
+        <div class="header-left">
+            <a href="#" class="logo">FRINGE ⬡</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#simulator">Simulator
+                            <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <polyline points="2,4 6,8 10,4" />
+                            </svg>
+                        </a></li>
+                    <li><a href="#simulator">Physics
+                            <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <polyline points="2,4 6,8 10,4" />
+                            </svg>
+                        </a></li>
+                    <li><a href="#simulator">Explore
+                            <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <polyline points="2,4 6,8 10,4" />
+                            </svg>
+                        </a></li>
+                    <li><a href="#simulator">Docs
+                            <svg class="chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <polyline points="2,4 6,8 10,4" />
+                            </svg>
+                        </a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="header-center">
+            <span class="kbd-hint">SPACE: Animate</span>
+            <span class="kbd-hint">R: Reset</span>
+            <span class="kbd-hint">↑↓: Fine Tune</span>
+        </div>
+
+        <div class="header-right">
+            <span class="live-clock" id="liveClock">00:00:00</span>
+            <button class="btn" id="tourBtn">⚡ Tour</button>
+            <button class="btn" id="exportBtn">⬇ Export CSV</button>
+        </div>
+    </header>
+
+    <!-- ===== ANIMATION INDICATOR ===== -->
+    <div class="animation-indicator" id="animationIndicator">
+        <div class="rec-dot"></div>
+        PHASE ANIMATING
+    </div>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero" id="hero">
+        <!-- Background Video -->
+        <div class="hero-video-bg">
+            <video autoplay muted loop playsinline>
+                <source
+                    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260217_030345_246c0224-10a4-422c-b324-070b7c0eceda.mp4"
+                    type="video/mp4">
+            </video>
+        </div>
+        <div class="hero-video-overlay"></div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <!-- Badge -->
+
+            <!-- Heading -->
+            <h1 class="hero-heading">Optical Interference at the Speed of Physics</h1>
+
+            <!-- Subtitle -->
+            <p class="hero-subtitle">
+                Simulate how unequal beam intensities affect fringe contrast in real-time. Visualize Michelson
+                visibility, coherence length, and the emergence of quantum interference — in your browser, no
+                installation required.
+            </p>
+
+            <!-- CTA Button -->
+            <a href="#simulator" class="pill-btn pill-btn-light">
+                <span class="pill-btn-inner">Launch Simulator →</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== MAIN DASHBOARD ===== -->
+    <div class="dashboard" id="simulator">
+
+        <!-- ===== LEFT: CONTROL PANEL ===== -->
+        <aside class="control-panel" id="controlPanel">
+
+            <!-- Intensity Controls -->
+            <div class="panel-section">
+                <div class="panel-section-title">Beam Intensities</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">I₁ (Beam 1)</span>
+                        <span class="control-value" id="i1Value">100</span>
+                    </div>
+                    <input type="range" id="i1Slider" min="0" max="200" value="100" step="1">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">I₂ (Beam 2)</span>
+                        <span class="control-value" id="i2Value">100</span>
+                    </div>
+                    <input type="range" id="i2Slider" min="0" max="200" value="100" step="1">
+                </div>
+
+                <div class="ratio-display">
+                    <div class="ratio-value" id="ratioValue">1.00</div>
+                    <div class="ratio-label">I₁ / I₂ Ratio</div>
+                </div>
+            </div>
+
+            <!-- Wave Parameters -->
+            <div class="panel-section">
+                <div class="panel-section-title">Wave Parameters</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">Wavelength (λ)</span>
+                        <span class="control-value" id="wavelengthValue">550 nm</span>
+                    </div>
+                    <input type="range" id="wavelengthSlider" min="380" max="780" value="550" step="1">
+                    <div class="wavelength-preview" id="wavelengthPreview"></div>
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">Phase Offset (φ₀)</span>
+                        <span class="control-value" id="phaseValue">0.00π</span>
+                    </div>
+                    <input type="range" id="phaseSlider" min="0" max="6.2832" value="0" step="0.01">
+                </div>
+            </div>
+
+            <!-- Optical Setup -->
+            <div class="panel-section">
+                <div class="panel-section-title">Optical Setup</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">Virtual Source Sep. (a)</span>
+                        <span class="control-value" id="slitSepValue">0.50 mm</span>
+                    </div>
+                    <input type="range" id="slitSepSlider" min="0.1" max="2.0" value="0.5" step="0.01">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">Screen Distance (L)</span>
+                        <span class="control-value" id="screenDistValue">100 cm</span>
+                    </div>
+                    <input type="range" id="screenDistSlider" min="10" max="300" value="100" step="1">
+                </div>
+            </div>
+
+            <!-- Coherence -->
+            <div class="panel-section">
+                <div class="panel-section-title">Coherence</div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span class="control-label-text">Linewidth (Δλ)</span>
+                        <span class="control-value" id="linewidthValue">1.0 nm</span>
+                    </div>
+                    <input type="range" id="linewidthSlider" min="0.01" max="50" value="1" step="0.1">
+                </div>
+
+                <div class="coherence-display">
+                    <div class="coherence-value" id="coherenceValue">—</div>
+                    <div class="coherence-label">Coherence Length (Lc)</div>
+                </div>
+            </div>
+
+            <!-- Animation -->
+            <div class="panel-section">
+                <div class="panel-section-title">Animation</div>
+                <div class="toggle-container">
+                    <span class="control-label-text">Phase Drift</span>
+                    <div class="toggle" id="animToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Special Modes -->
+            <div class="panel-section">
+                <div class="panel-section-title">Special Modes</div>
+                <div class="toggle-container" style="margin-bottom: 8px;">
+                    <span class="control-label-text">Quantum Mode</span>
+                    <div class="toggle" id="quantumToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <div class="toggle-container" style="margin-bottom: 12px;">
+                    <span class="control-label-text">Env. Noise</span>
+                    <div class="toggle" id="noiseToggle">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <button class="btn btn-warning" id="ligoBtn" style="width: 100%;">🌌 Simulate LIGO Event</button>
+            </div>
+
+            <!-- Presets -->
+            <div class="panel-section">
+                <div class="panel-section-title">Quick Presets</div>
+                <div class="preset-grid">
+                    <button class="btn-preset" id="presetEqual">Equal Beams<br><small>V = 1.0</small></button>
+                    <button class="btn-preset" id="presetRatio10">10:1 Ratio<br><small>V ≈ 0.57</small></button>
+                    <button class="btn-preset" id="presetNearZero">Near Zero<br><small>V → 0</small></button>
+                    <button class="btn-preset" id="presetHeNe">HeNe Laser<br><small>632.8 nm</small></button>
+                </div>
+            </div>
+
+            <!-- Unknown Wavelength Estimator -->
+            <div class="panel-section">
+                <div class="panel-section-title">Reverse Calculator</div>
+                <button class="btn btn-warning" id="estimatorToggle" style="width: 100%; margin-bottom: 8px;">▼ Estimate
+                    Unknown λ</button>
+                <div class="estimator-panel" id="estimatorPanel">
+                    <div class="estimator-input-group">
+                        <div class="control-label"><span class="control-label-text">Fringe Spacing (mm)</span></div>
+                        <input type="number" class="estimator-input" id="estFringeSpacing" placeholder="e.g. 1.1"
+                            step="0.01" value="1.1">
+                    </div>
+                    <div class="estimator-input-group">
+                        <div class="control-label"><span class="control-label-text">Source Separation (mm)</span></div>
+                        <input type="number" class="estimator-input" id="estSlitSep" placeholder="e.g. 0.5" step="0.01"
+                            value="0.5">
+                    </div>
+                    <div class="estimator-input-group">
+                        <div class="control-label"><span class="control-label-text">Screen Distance (cm)</span></div>
+                        <input type="number" class="estimator-input" id="estScreenDist" placeholder="e.g. 100" step="1"
+                            value="100">
+                    </div>
+                    <button class="btn btn-accent" id="estimatorCompute" style="width: 100%;">Compute λ</button>
+                    <div class="estimator-result">
+                        <div class="estimator-result-value" id="estimatorResultValue">—</div>
+                        <div class="estimator-result-unit">Estimated Wavelength</div>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ===== CENTER: CANVAS ZONE ===== -->
+        <main class="canvas-zone">
+            <div class="canvas-header">
+                <h2 class="canvas-title">2D Interference Pattern</h2>
+                <span class="fringe-counter">
+                    <span class="fringe-counter-dot"></span>
+                    <span id="fringeCountDisplay">— fringes</span>
+                </span>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="fringeCanvas"></canvas>
+                <div class="canvas-tooltip" id="canvasTooltip"></div>
+            </div>
+
+            <div class="formula-bar">
+                <span id="formulaBarContent">I(x) = I₁ + I₂ + 2√(I₁·I₂)·cos(2πx/d + φ₀) → loading...</span>
+            </div>
+
+            <!-- Analysis Row fills remaining space -->
+            <div class="analysis-row">
+
+                <!-- 1D Intensity Profile -->
+                <div class="analysis-panel">
+                    <div class="analysis-title">1D Intensity Profile I(x)</div>
+                    <div class="analysis-canvas-wrapper">
+                        <canvas id="profileCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Visibility vs Ratio Chart -->
+                <div class="analysis-panel">
+                    <div class="analysis-title">Visibility vs Intensity Ratio</div>
+                    <div class="chart-wrapper">
+                        <canvas id="visChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Phasor Diagram -->
+                <div class="analysis-panel">
+                    <div class="analysis-title">Phasor Diagram</div>
+                    <div class="analysis-canvas-wrapper">
+                        <canvas id="phasorCanvas"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- ===== RIGHT: METRICS PANEL ===== -->
+        <aside class="metrics-panel">
+
+            <!-- Visibility Gauge -->
+            <div class="panel-section">
+                <div class="panel-section-title">Fringe Visibility</div>
+                <div class="gauge-container">
+                    <div class="gauge-canvas-wrapper">
+                        <canvas id="gaugeCanvas"></canvas>
+                    </div>
+                    <div class="gauge-digital">
+                        <div class="gauge-value" id="visibilityValue">1.000</div>
+                        <div class="gauge-label">Michelson Visibility (V)</div>
+                    </div>
+                    <div class="gauge-quality" id="visibilityQuality">● Excellent</div>
+                </div>
+            </div>
+
+            <!-- Optimal Condition -->
+            <div class="optimal-indicator" id="optimalIndicator">
+                <div class="optimal-icon">✦</div>
+                <div class="optimal-text">V = 1.000</div>
+                <div class="optimal-desc">Optimal: I₁ = I₂ → Perfect Contrast</div>
+            </div>
+
+            <!-- Measurements -->
+            <div class="panel-section">
+                <div class="panel-section-title">Measurements</div>
+                <table class="measurement-table">
+                    <tr>
+                        <td>I_max</td>
+                        <td id="measImax">—</td>
+                    </tr>
+                    <tr>
+                        <td>I_min</td>
+                        <td id="measImin">—</td>
+                    </tr>
+                    <tr>
+                        <td>I₁/I₂</td>
+                        <td id="measRatio">—</td>
+                    </tr>
+                    <tr>
+                        <td>Fringe Spacing</td>
+                        <td id="measFringeSpacing">—</td>
+                    </tr>
+                    <tr>
+                        <td>Fringes</td>
+                        <td id="measFringeCount">—</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Live Formula -->
+            <div class="panel-section">
+                <div class="panel-section-title">Live Computation</div>
+                <div class="live-formula" id="liveFormulaContent">
+                    Loading...
+                </div>
+            </div>
+
+        </aside>
+
+    </div><!-- end dashboard -->
+
+    <!-- ===== FEATURES TOUR OVERLAY ===== -->
+    <div class="tour-overlay" id="tourOverlay">
+        <div class="tour-highlight"></div>
+        <div class="tour-tooltip">
+            <div class="tour-tooltip-title"></div>
+            <div class="tour-tooltip-text"></div>
+            <div class="tour-nav">
+                <button class="tour-btn tour-btn-prev">◀ Prev</button>
+                <div class="tour-dots"></div>
+                <button class="tour-btn tour-btn-next">Next ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/physics.js"></script>
+    <script src="js/renderers.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
