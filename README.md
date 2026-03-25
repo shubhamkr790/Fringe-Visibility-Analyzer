@@ -4,7 +4,7 @@
 *QtHack04 Hackathon — Problem Statement 2*
 
 <p align="center">
-  <img src="simulator.png" alt="Fringe Visibility Analyzer Dashboard" width="850" style="border-radius: 8px;">
+  <img src="img/simulator.png" alt="Fringe Visibility Analyzer Dashboard" width="850" style="border-radius: 8px;">
 </p>
 
 A browser-based, physics-accurate simulation of interference fringe formation that demonstrates how unequal beam intensities affect fringe contrast. Built with a premium Web3 design aesthetic and advanced physics engines to go above and beyond the required problem statement.
